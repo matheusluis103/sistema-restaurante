@@ -4,6 +4,7 @@ import com.restaurante.domain.entity.CategoriaProduto;
 import com.restaurante.domain.entity.Produto;
 import java.math.BigDecimal;
 
+// teste
 public record ProdutoRequest(
         Long categoriaId,
         String nome,
