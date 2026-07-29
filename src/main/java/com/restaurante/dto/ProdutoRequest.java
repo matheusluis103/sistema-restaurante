@@ -20,7 +20,7 @@ public record ProdutoRequest(
         return produto;
     }
     
-    private void preencher(Produto produto, CategoriaProduto categoria) {
+    public void preencher(Produto produto, CategoriaProduto categoria) {
         produto.setCategoria(categoria);
         produto.setNome(nome);
         produto.setDescricao(descricao);

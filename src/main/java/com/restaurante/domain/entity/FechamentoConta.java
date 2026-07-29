@@ -2,7 +2,7 @@ package com.restaurante.domain.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "fechamentos_conta")
@@ -30,7 +30,7 @@ public class FechamentoConta {
 
     @PrePersist
     public void prePersist() {
-        dataFechamento = LocalDateTime.now();
+        dataFechamento = LocalDate.now();
     }
 
     public Long getId() {
@@ -79,13 +79,5 @@ public class FechamentoConta {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
-    }
-
-    public LocalDateTime getCriadoEm() {
-        return criadoEm;
-    }
-
-    public void setCriadoEm(LocalDateTime criadoEm) {
-        this.criadoEm = criadoEm;
     }
 }

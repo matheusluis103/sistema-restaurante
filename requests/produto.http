@@ -1,0 +1,16 @@
+### Cadastrar Produto
+POST {{baseUrl}}/produtos
+Content-Type: application/json
+
+{
+  "categoriaId": 2,
+  "nome": "Parmegiana de Frango",
+  "descricao": "Filé de frango empanado com molho de tomate e queijo",
+  "preco": 45.90,
+  "disponivel": true,
+  "tempoPreparoMinutos": 25
+}
+
+### Environment
+# @name baseUrl
+# @value http://localhost:8080/api

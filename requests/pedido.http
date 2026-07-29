@@ -1,0 +1,16 @@
+@baseUrl = http://localhost:8080
+
+### Abrir pedido para mesa
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+
+{
+  "mesaId": 1,
+  "observacao": "Cliente pediu atendimento rapido"
+}
+
+### Listar pedidos
+GET {{baseUrl}}/pedidos?page=0&size=10&sort=dataAbertura,desc
+
+### Buscar pedido por ID
+GET {{baseUrl}}/pedidos/{{id}}

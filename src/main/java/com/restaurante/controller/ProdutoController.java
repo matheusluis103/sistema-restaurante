@@ -3,47 +3,45 @@ package com.restaurante.controller;
 import com.restaurante.dto.ProdutoRequest;
 import com.restaurante.dto.ProdutoResponse;
 import com.restaurante.service.ProdutoService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/produtos")
-@RequiredArgsConstructor
 public class ProdutoController {
     
     private final ProdutoService produtoService;
-    
-    @PostMapping
-    public ResponseEntity<ProdutoResponse> criar(@RequestBody ProdutoRequest request) {
-        ProdutoResponse response = produtoService.criar(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+    public ProdutoController(ProdutoService produtoService) {
+        this.produtoService = produtoService;
     }
     
-    @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponse> buscarPorId(@PathVariable Long id) {
-        ProdutoResponse response = produtoService.buscarPorId(id);
-        return ResponseEntity.ok(response);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProdutoResponse cadastrar(@RequestBody ProdutoRequest produtoRequest) {
+        return produtoService.cadastrar(produtoRequest);
     }
     
     @GetMapping
-    public ResponseEntity<List<ProdutoResponse>> listar() {
-        List<ProdutoResponse> produtos = produtoService.listar();
-        return ResponseEntity.ok(produtos);
+    public Page<ProdutoResponse> listar(Pageable pageable) {
+        return produtoService.listar(pageable);
+    }
+    
+    @GetMapping("/{id}")
+    public ProdutoResponse buscarPorId(@PathVariable Long id) {
+        return produtoService.buscarPorId(id);
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponse> atualizar(@PathVariable Long id, @RequestBody ProdutoRequest request) {
-        ProdutoResponse response = produtoService.atualizar(id, request);
-        return ResponseEntity.ok(response);
+    public ProdutoResponse atualizar(@PathVariable Long id, ProdutoRequest produtoRequest) {
+        return produtoService.atualizar(id, produtoRequest);
     }
-    
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        produtoService.deletar(id);
-        return ResponseEntity.noContent().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long id) {
+        produtoService.excluir(id);
     }
 }
