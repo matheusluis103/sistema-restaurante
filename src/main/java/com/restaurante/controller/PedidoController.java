@@ -1,8 +1,11 @@
 package com.restaurante.controller;
 
+import com.restaurante.dto.PedidoItemRequest;
+import com.restaurante.dto.PedidoItemResponse;
 import com.restaurante.dto.PedidoRequest;
 import com.restaurante.dto.PedidoResponse;
 import com.restaurante.service.PedidoService;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -40,4 +43,15 @@ public class PedidoController {
         return pedidoService.buscarPorId(id);
     }
 
+    @PostMapping("/{pedidoId}/itens")
+    @ResponseStatus(HttpStatus.CREATED)
+    public PedidoItemResponse adicionarItem(@PathVariable Long pedidoId,
+            @RequestBody PedidoItemRequest request) {
+        return pedidoService.adicionarItem(pedidoId, request);
+    }
+
+    @GetMapping("/{pedidoId}/itens")
+    public List<PedidoItemResponse> listarItens(@PathVariable Long pedidoId) {
+        return pedidoService.listarItens(pedidoId);
+    }
 }
