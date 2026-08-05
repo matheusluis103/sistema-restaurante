@@ -4,6 +4,8 @@ import com.restaurante.domain.entity.PedidoItem;
 import com.restaurante.domain.enums.StatusItemPedido;
 import com.restaurante.dto.CozinhaItemResponse;
 import com.restaurante.repository.PedidoItemRepository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,7 @@ public class CozinhaService {
             throw new com.restaurante.exception.RegraNegocioException("Somente itens pendentes podem iniciar preparo.");
         }
         item.setStatus(StatusItemPedido.EM_PREPARO);
+        item.setDataInicioPreparo(LocalDateTime.now());
         return CozinhaItemResponse.fromEntity(pedidoItemRepository.save(item));
     }
 
@@ -42,6 +45,7 @@ public class CozinhaService {
             throw new com.restaurante.exception.RegraNegocioException("Somente itens em preparo podem ser marcados como pronto.");
         }
         item.setStatus(StatusItemPedido.PRONTO);
+        item.setDataPronto(LocalDateTime.now());
         return CozinhaItemResponse.fromEntity(pedidoItemRepository.save(item));
     }
 
@@ -51,6 +55,7 @@ public class CozinhaService {
             throw new com.restaurante.exception.RegraNegocioException("Somente itens prontos podem ser entregues.");
         }
         item.setStatus(StatusItemPedido.ENTREGUE);
+        item.setDataEntrega(LocalDateTime.now());
         return CozinhaItemResponse.fromEntity(pedidoItemRepository.save(item));
     }
 

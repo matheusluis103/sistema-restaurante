@@ -3,6 +3,7 @@ package com.restaurante.domain.entity;
 import com.restaurante.domain.enums.StatusItemPedido;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pedido_itens")
@@ -29,6 +30,15 @@ public class PedidoItem {
 
     @Enumerated(EnumType.STRING)
     private StatusItemPedido status = StatusItemPedido.PENDENTE;
+
+    @Column(name = "data_inicio_preparo")
+    private LocalDateTime dataInicioPreparo;
+
+    @Column(name = "data_pronto")
+    private LocalDateTime dataPronto;
+
+    @Column(name = "data_entrega")
+    private LocalDateTime dataEntrega;
 
     public Long getId() {
         return id;
@@ -85,4 +95,29 @@ public class PedidoItem {
     public void setStatus(StatusItemPedido status) {
         this.status = status;
     }
+
+    public LocalDateTime getDataInicioPreparo() {
+        return dataInicioPreparo;
+    }
+
+    public void setDataInicioPreparo(LocalDateTime dataInicioPreparo) {
+        this.dataInicioPreparo = dataInicioPreparo;
+    }
+
+    public LocalDateTime getDataPronto() {
+        return dataPronto;
+    }
+
+    public void setDataPronto(LocalDateTime dataPronto) {
+        this.dataPronto = dataPronto;
+    }
+
+    public LocalDateTime getDataEntrega() {
+        return dataEntrega;
+    }
+
+    public void setDataEntrega(LocalDateTime dataEntrega) {
+        this.dataEntrega = dataEntrega;
+    }
+
 }

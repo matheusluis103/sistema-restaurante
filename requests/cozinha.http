@@ -1,16 +1,23 @@
 @baseUrl = http://localhost:8080
 
+# Requests da cozinha
+# Pré-requisitos:
+# - Aplicação rodando em http://localhost:8080
+# - Existem `pedido` e `pedido itens` criados (use `pedido.http`)
+# Sequência de uso sugerida:
+# 1) `GET /cozinha/itens-pendentes` para ver itens a preparar
+# 2) `PATCH /cozinha/itens/{itemId}/iniciar-preparo`
+# 3) `PATCH /cozinha/itens/{itemId}/marcar-pronto`
+# 4) `PATCH /cozinha/itens/{itemId}/entregar` (após `PRONTO`)
+
 ### Listar itens pendentes
-GET {{baseUrl}}/cozinha/pendentes
+GET {{baseUrl}}/cozinha/itens-pendentes
 
 ### Listar itens em preparo
-GET {{baseUrl}}/cozinha/em-preparo
+GET {{baseUrl}}/cozinha/itens-em-preparo
 
 ### Iniciar preparo do item
 PATCH {{baseUrl}}/cozinha/itens/1/iniciar-preparo
-
-### Listar itens pendentes
-GET {{baseUrl}}/cozinha/pendentes
 
 ### Marcar item como pronto
 PATCH {{baseUrl}}/cozinha/itens/1/marcar-pronto

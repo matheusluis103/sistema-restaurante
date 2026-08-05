@@ -1,5 +1,15 @@
+# Requests de produto
+# Pré-requisitos:
+# - Aplicação rodando em http://localhost:8080
+# - Categoria com `id=2` existe (migrations inserem categorias iniciais)
+# Uso:
+# 1) Executar este bloco `POST` para cadastrar um produto
+# 2) Usar `GET /api/produtos` para listar e confirmar criação
+
+@baseUrl = http://localhost:8080
+
 ### Cadastrar Produto
-POST {{baseUrl}}/produtos
+POST {{baseUrl}}/api/produtos
 Content-Type: application/json
 
 {
@@ -10,7 +20,3 @@ Content-Type: application/json
   "disponivel": true,
   "tempoPreparoMinutos": 25
 }
-
-### Environment
-# @name baseUrl
-# @value http://localhost:8080/api

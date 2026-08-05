@@ -1,3 +1,14 @@
+# Requests de pedido
+# Pré-requisitos:
+# - Aplicação rodando em http://localhost:8080
+# - Mesa com `id=2` (migrations inserem mesas iniciais)
+# Sequência de uso sugerida:
+# 1) `POST /pedidos` — abrir pedido para uma mesa
+# 2) `POST /pedidos/{pedidoId}/itens` — adicionar itens ao pedido
+# 3) usar endpoints da `cozinha.http` para avançar status (iniciar, pronto, entregar)
+# 4) `POST /pedidos/{pedidoId}/fechamento` — fechar conta (todos os itens devem estar ENTREGUE)
+# 5) `GET /pedidos/{pedidoId}/fechamento` — obter o fechamento
+
 @baseUrl = http://localhost:8080
 
 ### Abrir pedido para mesa
@@ -5,7 +16,7 @@ POST {{baseUrl}}/pedidos
 Content-Type: application/json
 
 {
-  "mesaId": 1,
+  "mesaId": 2,
   "observacao": "Cliente pediu atendimento rapido"
 }
 
@@ -13,10 +24,10 @@ Content-Type: application/json
 GET {{baseUrl}}/pedidos?page=0&size=10&sort=dataAbertura,desc
 
 ### Buscar pedido por ID
-GET {{baseUrl}}/pedidos/{{id}}
+GET {{baseUrl}}/pedidos/2
 
 ### Adicionar item ao pedido
-POST {{baseUrl}}/pedidos/1/itens
+POST {{baseUrl}}/pedidos/2/itens
 Content-Type: application/json
 
 {
@@ -26,7 +37,7 @@ Content-Type: application/json
 }
 
 ### Adicionar outro item ao pedido
-POST {{baseUrl}}/pedidos/1/itens
+POST {{baseUrl}}/pedidos/2/itens
 Content-Type: application/json
 
 {
@@ -36,4 +47,4 @@ Content-Type: application/json
 }
 
 ### Listar itens do pedido
-GET {{baseUrl}}/pedidos/1/itens
+GET {{baseUrl}}/pedidos/2/itens

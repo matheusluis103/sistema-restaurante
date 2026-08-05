@@ -1,0 +1,21 @@
+@baseUrl = http://localhost:8080
+
+# Requests de fechamento
+# Pré-requisitos:
+# - Aplicação rodando em http://localhost:8080
+# - Pedido com itens TODOS no status `ENTREGUE` (use `pedido.http` + `cozinha.http` para avançar status)
+# Uso:
+# 1) `POST /pedidos/{id}/fechamento` para fechar a conta
+# 2) `GET /pedidos/{id}/fechamento` para obter os dados do fechamento
+
+### Fechar conta do pedido
+POST {{baseUrl}}/pedidos/2/fechamento
+Content-Type: application/json
+
+{
+  "taxaServico": 10.00,
+  "desconto": 5.00
+}
+
+### Buscar fechamento de conta do pedido
+GET {{baseUrl}}/pedidos/2/fechamento

@@ -65,14 +65,24 @@ Se ocorrer erro de resolução de dependências, verifique sua conexão com a in
 - `GET /pedidos/{id}` - busca pedido por id
 - `POST /pedidos/{pedidoId}/itens` - adiciona item ao pedido
 - `GET /pedidos/{pedidoId}/itens` - lista itens de um pedido
+- `POST /pedidos/{pedidoId}/fechamento` - fecha a conta do pedido
+- `GET /pedidos/{pedidoId}/fechamento` - busca o fechamento da conta
 
 ### Cozinha
 
-- `GET /cozinha/pendentes` - lista itens pendentes
-- `GET /cozinha/em-preparo` - lista itens em preparo
-- `PATCH /cozinha/{itemId}/iniciar` - marca item como em preparo
-- `PATCH /cozinha/{itemId}/pronto` - marca item como pronto
-- `PATCH /cozinha/{itemId}/entregar` - marca item como entregue
+- `GET /cozinha/itens-pendentes` - lista itens pendentes
+- `GET /cozinha/itens-em-preparo` - lista itens em preparo
+- `PATCH /cozinha/itens/{itemId}/iniciar-preparo` - marca item como em preparo
+- `PATCH /cozinha/itens/{itemId}/marcar-pronto` - marca item como pronto
+- `PATCH /cozinha/itens/{itemId}/entregar` - marca item como entregue
+
+### Produto
+
+- `POST /api/produtos` - cadastra produto
+- `GET /api/produtos` - lista produtos paginados
+- `GET /api/produtos/{id}` - busca produto por id
+- `PUT /api/produtos/{id}` - atualiza produto
+- `DELETE /api/produtos/{id}` - exclui produto
 
 ## Testando requests
 
@@ -80,10 +90,57 @@ O projeto já contém arquivos de requisição em `requests/`:
 
 - `requests/pedido.http`
 - `requests/cozinha.http`
+- `requests/produto.http`
+- `requests/fechamento.http`
 
 Basta abrir esses arquivos no VS Code e executar as requisições com a extensão HTTP client.
 
-### Exemplos
+### Sequência de uso (passo a passo)
+
+Siga esta ordem para testar o fluxo completo com os arquivos de requests:
+
+1. Start the application:
+
+```powershell
+cd c:\desenvolvimento\sistema-restaurante
+mvn spring-boot:run
+```
+
+2. Criar produtos (use `requests/produto.http`):
+
+- Executar o `POST /api/produtos` para cadastrar itens no cardápio.
+- Use `GET /api/produtos` para confirmar.
+
+3. Abrir pedido (use `requests/pedido.http`):
+
+- `POST /pedidos` com `mesaId` existente para abrir um pedido.
+- `GET /pedidos` e `GET /pedidos/{id}` para verificar.
+
+4. Adicionar itens ao pedido (use `requests/pedido.http`):
+
+- `POST /pedidos/{pedidoId}/itens` para incluir produtos no pedido.
+- `GET /pedidos/{pedidoId}/itens` para listar os itens.
+
+5. Fluxo da cozinha (use `requests/cozinha.http`):
+
+- `GET /cozinha/itens-pendentes` para ver itens a preparar.
+- `PATCH /cozinha/itens/{itemId}/iniciar-preparo` para marcar como `EM_PREPARO`.
+- `PATCH /cozinha/itens/{itemId}/marcar-pronto` para marcar `PRONTO`.
+- `PATCH /cozinha/itens/{itemId}/entregar` para marcar `ENTREGUE`.
+
+6. Fechamento da conta (use `requests/fechamento.http`):
+
+- Somente após todos os itens do pedido estarem no status `ENTREGUE`.
+- `POST /pedidos/{pedidoId}/fechamento` para criar o fechamento.
+- `GET /pedidos/{pedidoId}/fechamento` para recuperar os dados.
+
+### Observações sobre erros comuns
+
+- `400 Bad Request` ao criar pedido: verifique se a `mesa` está livre.
+- `400 Bad Request` ao fechar: todos os itens devem estar `ENTREGUE`.
+- Use os arquivos em `requests/` para avançar o estado dos itens quando necessário.
+
+### Exemplos rápidos
 
 Abrir pedido:
 
@@ -110,18 +167,17 @@ Content-Type: application/json
 }
 ```
 
-Listar itens da cozinha:
+Fechar pedido (após entrega dos itens):
 
 ```http
-GET http://localhost:8080/cozinha/pendentes
+POST http://localhost:8080/pedidos/1/fechamento
+Content-Type: application/json
+
+{
+  "taxaServico": 10.00,
+  "desconto": 5.00
+}
 ```
-
-Marcar item como em preparo:
-
-```http
-PATCH http://localhost:8080/cozinha/1/iniciar
-```
-
 ## Swagger / OpenAPI
 
 Se o projeto estiver rodando com sucesso, o Swagger UI normalmente fica disponível em:

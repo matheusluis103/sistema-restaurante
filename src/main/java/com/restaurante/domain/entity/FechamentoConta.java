@@ -80,4 +80,12 @@ public class FechamentoConta {
     public void setTotal(BigDecimal total) {
         this.total = total;
     }
+
+    public LocalDate getDataFechamento() {
+        return dataFechamento;
+    }
+
+    public void setDataFechamento(LocalDate dataFechamento) {
+        this.dataFechamento = dataFechamento;
+    }
 }
