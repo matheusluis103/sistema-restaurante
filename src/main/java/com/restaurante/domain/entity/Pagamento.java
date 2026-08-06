@@ -4,6 +4,7 @@ import com.restaurante.domain.enums.FormaPagamento;
 import com.restaurante.domain.enums.StatusPagamento;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity

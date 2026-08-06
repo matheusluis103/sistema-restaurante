@@ -1,0 +1,15 @@
+# Requests do fake payment service
+# Pré-requisitos:
+# - Módulo pagamentofake rodando em http://localhost:9090
+# - Serviço principal pode usar este endpoint para processar pagamentos
+
+@baseUrl = http://localhost:9090
+
+### Processar pagamento
+POST {{baseUrl}}/pagamentos/processar
+Content-Type: application/json
+
+{
+  "valor": 120.50,
+  "formaPagamento": "PIX"
+}

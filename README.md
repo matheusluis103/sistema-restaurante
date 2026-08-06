@@ -56,6 +56,56 @@ mvn spring-boot:run
 
 Se ocorrer erro de resolução de dependências, verifique sua conexão com a internet e o acesso ao repositório Maven central.
 
+## Módulo de pagamento fake
+
+O projeto inclui um módulo separado chamado `pagamentofake` que simula o serviço de pagamento com um endpoint REST local em `http://localhost:9090`.
+
+- O serviço principal usa `Spring Cloud OpenFeign` para chamar o endpoint fake de pagamento.
+- A URL do serviço fake está configurada em `src/main/resources/application.properties` como `pagamento.api.url=http://localhost:9090`.
+- O fake expõe:
+  - `POST /pagamentos/processar` para processar o pagamento
+  - `GET /pagamentos/health` para checar se o serviço está no ar
+
+### Como executar em conjunto
+
+1. Abra um terminal na pasta do módulo fake:
+
+```powershell
+cd c:\desenvolvimento\sistema-restaurante\pagamentofake
+mvn spring-boot:run
+```
+
+2. Abra outro terminal na raiz do projeto principal:
+
+```powershell
+cd c:\desenvolvimento\sistema-restaurante
+mvn spring-boot:run
+```
+
+3. Use os requests em `requests/` para testar o fluxo completo.
+
+## Como funciona o código de pagamento
+
+- `src/main/java/com/restaurante/controller/PedidoController.java` possui o endpoint `POST /pedidos/{pedidoId}/pagar`.
+- Esse endpoint chama `PagamentoService.pagar(pedidoId, formaPagamento)`.
+- `PagamentoService` busca o fechamento do pedido e envia uma requisição para o fake payment service via `PagamentoClient`.
+- `PagamentoClient` é um Feign client configurado com `@FeignClient(name = "pagamento-client", url = "${pagamento.api.url}")`.
+- O fake service em `pagamentofake/src/main/java/com/restaurante/pagamentofake/controller/PagamentoController.java` sempre retorna um pagamento `APROVADO` com um `codigoTransacao` gerado.
+- Quando o pagamento é aprovado, o sistema principal:
+  - marca o pedido como `FECHADO`
+  - libera a mesa como `LIVRE`
+  - persiste um registro de `Pagamento`
+
+## Testando o pagamento fake
+
+1. Inicie o fake em `http://localhost:9090` e verifique `GET http://localhost:9090/pagamentos/health`.
+2. Inicie a aplicação principal em `http://localhost:8080`.
+3. Crie pedidos, adicione itens e avance o fluxo da cozinha normalmente.
+4. Após fechar a conta do pedido, execute `POST /pedidos/{pedidoId}/pagar?formaPagamento=PIX` no serviço principal.
+5. O fake retornará `"status": "APROVADO"` e o pedido será fechado.
+
+> Observação: não é necessário chamar diretamente `POST /pagamentos/processar` quando estiver usando o fluxo principal. O endpoint `POST /pedidos/{pedidoId}/pagar` já dispara a chamada ao serviço fake.
+
 ## Endpoints principais
 
 ### Pedido
@@ -92,6 +142,7 @@ O projeto já contém arquivos de requisição em `requests/`:
 - `requests/cozinha.http`
 - `requests/produto.http`
 - `requests/fechamento.http`
+- `requests/pagamento.http`
 
 Basta abrir esses arquivos no VS Code e executar as requisições com a extensão HTTP client.
 

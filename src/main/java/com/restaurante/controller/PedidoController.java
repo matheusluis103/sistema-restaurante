@@ -4,16 +4,18 @@ import com.restaurante.dto.PedidoItemRequest;
 import com.restaurante.dto.PedidoItemResponse;
 import com.restaurante.dto.PedidoRequest;
 import com.restaurante.dto.PedidoResponse;
+import com.restaurante.service.PagamentoService;
 import com.restaurante.service.PedidoService;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,9 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class PedidoController {
 
     private final PedidoService pedidoService;
+    private final PagamentoService pagamentoService;
 
-    public PedidoController(PedidoService pedidoService) {
+    public PedidoController(PedidoService pedidoService, PagamentoService pagamentoService) {
         this.pedidoService = pedidoService;
+        this.pagamentoService = pagamentoService;
     }
 
     @PostMapping
@@ -53,5 +57,10 @@ public class PedidoController {
     @GetMapping("/{pedidoId}/itens")
     public List<PedidoItemResponse> listarItens(@PathVariable Long pedidoId) {
         return pedidoService.listarItens(pedidoId);
+    }
+
+    @PostMapping("/{pedidoId}/pagar")
+    public void pagar(@PathVariable Long pedidoId, @RequestParam String formaPagamento) {
+        pagamentoService.pagar(pedidoId, formaPagamento);
     }
 }
